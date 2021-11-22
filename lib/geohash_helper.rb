@@ -6,7 +6,12 @@ require "geohash_helper/version"
 
 module GeohashHelper
   extend Fiddle::Importer
-  dlload File.expand_path('./geohash_lib_go.so', __dir__)
+
+  os = %x(uname -s).chomp.downcase
+  arch = %x(uname -m).chomp.downcase
+  arch = "amd64" if arch == "x86_64"
+  dlload File.expand_path("./build/#{os}_#{arch}_geohash_lib_go.so", __dir__)
+
   extern 'int IsIntersect(char*, char*)'
   extern 'char* IntersectGeohashes(char** geohashes_a, int size_a, char** geohashes_b, int size_b)'
   extern 'void Free(void*)'
