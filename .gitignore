@@ -64,3 +64,4 @@ dkms.conf
 
 # rspec failure tracking
 .rspec_status
+vendor
