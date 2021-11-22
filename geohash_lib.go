@@ -6,6 +6,7 @@ package main
 import "C"
 
 import (
+	"sort"
 	"strings"
 	"unsafe"
 )
@@ -57,7 +58,8 @@ func makeIntersectGeohashes(geohashToSizeA map[string]int, geohashToSizeB map[st
 		}
 	}
 
-	return fetchKeys(intersected)
+	geohashes := reduceOutside(intersected)
+	return geohashes
 }
 
 func fetchKeys(hash map[string]struct{}) []string {
@@ -68,6 +70,29 @@ func fetchKeys(hash map[string]struct{}) []string {
 		i++
 	}
 	return keys
+}
+
+func reduceOutside(geohashesMap map[string]struct{}) []string {
+	// ジオハッシュの長い順(エリアの小さい順)にソート
+	geohashes := fetchKeys(geohashesMap)
+	sort.Slice(geohashes, func(i, j int) bool { return len(geohashes[i]) > len(geohashes[j]) })
+
+	// 小さいエリアから順番に、自分を含んでいる大きなエリアを判定し、有ったら消していく
+	for _, a := range geohashes {
+		for b, _ := range geohashesMap {
+			if isInSide(a, b) { // a は b の内部にあるので、 a が優先され b は削除できる
+				delete(geohashesMap, b)
+			}
+		}
+	}
+
+	return fetchKeys(geohashesMap)
+}
+
+func isInSide(a, b string) bool {
+	// Copy from https://golang.org/src/strings/strings.go .HasPrefix
+	// a の方が長く、 b と一致するならば、 エリア a は エリア b の内部にある(接していない)
+	return len(a) > len(b) && a[0:len(b)] == b
 }
 
 func makeGeohashToSizeMap(geohashes []string) map[string]int {
