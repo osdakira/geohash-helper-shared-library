@@ -22,8 +22,8 @@ module GeohashHelper
 
   def self.intersect_geohashes(geohashes_a, geohashes_b)
     # GC に回収されないように
-    geohashes_a_pack = geohashes_a.pack('p*')
-    geohashes_b_pack = geohashes_b.pack('p*')
+    geohashes_a_pack = geohashes_a.map(&:+@).pack('p*')
+    geohashes_b_pack = geohashes_b.map(&:+@).pack('p*')
     c_pointer = IntersectGeohashes(
       geohashes_a_pack, geohashes_a.size,
       geohashes_b_pack, geohashes_b.size
