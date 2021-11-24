@@ -7,8 +7,10 @@ jobs:
       - uses: actions/checkout@v2
       - uses: actions/setup-go@v2
         with:
-          go-version: '^1.17.3'
+          go-version: '^1.14.1'
+      - run: go test -v .
       - run: go build -buildmode=c-shared -o lib/build/linux_amd64_geohash_lib_go.so ./geohash_lib.go
+      - run: ruby test/geohash_helper_test.rb
       - name: git setting
         run: |
           git config --local user.email "osd.akira@gmail.com"
@@ -26,7 +28,9 @@ jobs:
       - uses: actions/setup-go@v2
         with:
           go-version: '^1.17.3'
+      - run: go test
       - run: go build -buildmode=c-shared -o lib/build/darwin_amd64_geohash_lib_go.so ./geohash_lib.go
+      - run: ruby test/geohash_helper_test.rb
       - name: git setting
         run: |
           git config --local user.email "osd.akira@gmail.com"
