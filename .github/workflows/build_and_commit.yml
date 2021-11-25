@@ -25,7 +25,7 @@ jobs:
           git config --local user.name "osdakira"
       - name: Commit files
         run: |
-          git add lib/build/${GOOS}_${GOARCH}_geohash_lib_go.so
+          git add -f lib/build/${GOOS}_${GOARCH}_geohash_lib_go.so
           git commit -m "Update so"
-          git pull origin ${GITHUB_REF#refs/heads/} --no-rebase
-          git push origin ${GITHUB_REF#refs/heads/}
+          git pull origin main --no-rebase
+          git push origin main
