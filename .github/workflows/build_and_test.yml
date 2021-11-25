@@ -1,0 +1,15 @@
+on: [push]
+jobs:
+  build:
+    strategy:
+      matrix:
+        os: [ubuntu-latest, macos-latest]
+    runs-on: ${{ matrix.os }}
+    steps:
+      - uses: actions/checkout@v2
+      - uses: actions/setup-go@v2
+        with:
+          go-version: '^1.17.3'
+      - run: go test -v .
+      - run: go build -buildmode=c-shared -o lib/build/${GOOS}_${GOARCH}_geohash_lib_go.so ./geohash_lib.go
+      - run: ruby test/geohash_helper_test.rb
