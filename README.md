@@ -1,8 +1,7 @@
 # GeohashHelper
 
-Welcome to your new gem! In this directory, you'll find the files you need to be able to package up your Ruby library into a gem. Put your Ruby code in the file `lib/geohash_helper`. To experiment with that code, run `bin/console` for an interactive prompt.
-
-TODO: Delete this and the text above, and describe your gem
+GeohashHelper is a gem for fast geohash handling.
+It is a module that uses a shared library written by golang through fiddle.
 
 ## Installation
 
@@ -22,13 +21,32 @@ Or install it yourself as:
 
 ## Usage
 
-TODO: Write usage instructions here
+- `GeohashHelper.intersect?`
 
-## Development
+```rb
+irb(main):008:0> GeohashHelper.intersect?('abc', 'ab')
+=> true
+irb(main):009:0> GeohashHelper.intersect?('abc', 'ac')
+=> false
+```
 
-After checking out the repo, run `bin/setup` to install dependencies. Then, run `rake spec` to run the tests. You can also run `bin/console` for an interactive prompt that will allow you to experiment.
+- `GeohashHelper.intersect_geohashes`
 
-To install this gem onto your local machine, run `bundle exec rake install`. To release a new version, update the version number in `version.rb`, and then run `bundle exec rake release`, which will create a git tag for the version, push git commits and tags, and push the `.gem` file to [rubygems.org](https://rubygems.org).
+```
+irb(main):010:0> GeohashHelper.intersect_geohashes(['abc', 'def'], ['abcdef', 'aa', 'de'])
+=> ["def", "abcdef"]
+```
+
+## Speed
+
+20,000 x 20,000 geohashes intersect comparison
+
+```
+$ ruby test/compare.rb
+       user     system      total        real
+ffi   7.350918   0.015016   7.365934 (  7.360118)
+ruby 93.476806   0.143442  93.620248 ( 93.829111)
+```
 
 ## Contributing
 
