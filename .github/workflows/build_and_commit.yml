@@ -1,13 +1,18 @@
-name: build_shared_library
-on: [push]
+on:
+  pull_request:
+    branches:
+      - main
+    types: [closed]
+
 jobs:
   build_linux:
+    if: github.event.pull_request.merged == true
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v2
       - uses: actions/setup-go@v2
         with:
-          go-version: '^1.14.1'
+          go-version: '^1.17.3'
       - run: go test -v .
       - run: go build -buildmode=c-shared -o lib/build/linux_amd64_geohash_lib_go.so ./geohash_lib.go
       - run: ruby test/geohash_helper_test.rb
@@ -22,6 +27,7 @@ jobs:
           git pull origin ${GITHUB_REF#refs/heads/} --no-rebase
           git push origin ${GITHUB_REF#refs/heads/}
   build_macos:
+    if: github.event.pull_request.merged == true
     runs-on: macos-latest
     steps:
       - uses: actions/checkout@v2
