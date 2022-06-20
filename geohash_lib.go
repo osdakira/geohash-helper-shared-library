@@ -10,6 +10,33 @@ import (
 	"unsafe"
 )
 
+var base32 = []byte("0123456789bcdefghjkmnpqrstuvwxyz")
+
+//export IncreaseLengthToMax
+func IncreaseLengthToMax(geohash []byte, maxLength int) [][]byte {
+	nextGeohashes := increaseLength(geohash)
+	curLength := len(geohash)
+	if curLength+1 == maxLength {
+		return nextGeohashes
+	} else {
+		geohashes := make([][]byte, 0)
+		for _, v := range nextGeohashes {
+			next2Geohashes := IncreaseLengthToMax(v, maxLength)
+			geohashes = append(geohashes, next2Geohashes...)
+		}
+		return geohashes
+	}
+}
+
+func increaseLength(geohash []byte) [][]byte {
+	geohashes := make([][]byte, 32)
+	for i, v := range base32 {
+		geohashes[i] = append([]byte{}, geohash...)
+		geohashes[i] = append(geohashes[i], v)
+	}
+	return geohashes
+}
+
 //export IsIntersect
 func IsIntersect(c_a, c_b *C.char) int {
 	a := C.GoString(c_a)
