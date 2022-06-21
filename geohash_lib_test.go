@@ -20,9 +20,9 @@ func TestMakeIntersectGeohashes(t *testing.T) {
 	}
 }
 
-func TestIncreaseLengthToMax(t *testing.T) {
+func TestincreaseLengthToMax(t *testing.T) {
 	geohash := []byte("xn77h")
-	actual := IncreaseLengthToMax(geohash, 7)
+	actual := increaseLengthToMax(geohash, 7)
 
 	expect := make([][]byte, 32*32)
 	i := 0

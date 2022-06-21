@@ -13,7 +13,18 @@ import (
 var base32 = []byte("0123456789bcdefghjkmnpqrstuvwxyz")
 
 //export IncreaseLengthToMax
-func IncreaseLengthToMax(geohash []byte, maxLength int) [][]byte {
+func IncreaseLengthToMax(cGeohash *C.char, maxLength C.int) *C.char {
+	geohash := []byte(C.GoString(cGeohash))
+	geohashes := increaseLengthToMax(geohash, int(maxLength))
+	strs := make([]string, len(geohashes))
+	for i, v := range geohashes {
+		strs[i] = string(v)
+	}
+	joinedStr := strings.Join(strs, ",")
+	return C.CString(joinedStr) // 配列での返し方がわからないので、文字列にして返す
+}
+
+func increaseLengthToMax(geohash []byte, maxLength int) [][]byte {
 	nextGeohashes := increaseLength(geohash)
 	curLength := len(geohash)
 	if curLength+1 == maxLength {
@@ -21,7 +32,7 @@ func IncreaseLengthToMax(geohash []byte, maxLength int) [][]byte {
 	} else {
 		geohashes := make([][]byte, 0)
 		for _, v := range nextGeohashes {
-			next2Geohashes := IncreaseLengthToMax(v, maxLength)
+			next2Geohashes := increaseLengthToMax(v, maxLength)
 			geohashes = append(geohashes, next2Geohashes...)
 		}
 		return geohashes
