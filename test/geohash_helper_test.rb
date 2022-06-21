@@ -37,4 +37,21 @@ class GeohashHelperTest < Test::Unit::TestCase
       assert_equal(GeohashHelper.intersect_geohashes(geohashes_a, geohashes_b).sort, expected)
     end
   end
+
+  def test_increase_length_to_max
+    test_cases = [
+      { g: 'abc', len: 2, expected: %w[abc], e_len: 1 },
+      { g: 'abc', len: 3, expected: %w[abc], e_len: 1 },
+      { g: 'abc', len: 4, expected: %w[abcx abcy abcz], e_len: 32 },
+      { g: 'abc', len: 5, expected: %w[abczx abczy abczz], e_len: 1024 },
+      { g: 'abc', len: 6, expected: %w[abczzx abczzy abczzz], e_len: 32768 },
+    ]
+
+    test_cases.each do |test_case|
+      geohash, max_length, expected, expected_length = test_case.values_at(:g, :len, :expected, :e_len)
+      got = GeohashHelper.increase_length_to_max(geohash, max_length).sort
+      assert_equal(got.last(3), expected)
+      assert_equal(got.size, expected_length)
+    end
+  end
 end
