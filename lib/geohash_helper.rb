@@ -15,6 +15,7 @@ module GeohashHelper
   extern 'int IsIntersect(char*, char*)'
   extern 'char* IntersectGeohashes(char** geohashes_a, int size_a, char** geohashes_b, int size_b)'
   extern 'void Free(void*)'
+  extern 'char* MakeGeohashWithPrecisionFromPolygonWkt(char** wkt_polygon, int precision)'
 
   def self.intersect?(geohash_a, geohash_b)
     IsIntersect(geohash_a, geohash_b) == 1 # 0,1 で返ってくる
@@ -28,6 +29,14 @@ module GeohashHelper
       geohashes_a_pack, geohashes_a.size,
       geohashes_b_pack, geohashes_b.size
     )
+    result_string = c_pointer.to_s
+    Free(c_pointer)
+    result_string.split(',') # csv 形式で配列が返ってくる
+  end
+
+  def self.make_gohashes_with_precision(wkt_polygon, precision)
+    # GC に回収されないように
+    c_pointer = MakeGeohashWithPrecisionFromPolygonWkt(wkt_polygon, precision)
     result_string = c_pointer.to_s
     Free(c_pointer)
     result_string.split(',') # csv 形式で配列が返ってくる
