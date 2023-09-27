@@ -48,6 +48,17 @@ ffi   7.350918   0.015016   7.365934 (  7.360118)
 ruby 93.476806   0.143442  93.620248 ( 93.829111)
 ```
 
+## Build
+
+1. Install Golang
+
+https://go.dev/dl/
+
+Do not use Docker, because The CGO demand on Host Machine Architecture.
+
+2. make.sh
+
+
 ## Contributing
 
 Bug reports and pull requests are welcome on GitHub at https://github.com/osdakira/geohash_helper.
