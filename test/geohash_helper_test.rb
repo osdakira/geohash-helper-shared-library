@@ -37,4 +37,11 @@ class GeohashHelperTest < Test::Unit::TestCase
       assert_equal(GeohashHelper.intersect_geohashes(geohashes_a, geohashes_b).sort, expected)
     end
   end
+
+  def test_make_gohashes_with_precision
+    wkt_polygon = "POLYGON ((132.9709406620001 34.11831060600008, 132.9704386200001 34.11865367400003, 132.9697404750001 34.11975379000006, 132.96891048500004 34.11988086000002, 132.96853966600008 34.11865384600003, 132.96873584000002 34.11737278000004, 132.969587982 34.11632664000007, 132.97019897200005 34.116362571000025, 132.97015482900008 34.11731862700003, 132.9707228300001 34.11726456400004, 132.97113777200002 34.11758954100003, 132.9709406620001 34.11831060600008))"
+    got = GeohashHelper.make_gohashes_with_precision(wkt_polygon, 7).sort
+    expected = %w[wynd1f9 wynd1fb wynd1fc wynd1ff wynd1g0 wynd1g1 wynd1g2 wynd1g3 wynd1g4]
+    assert_equal(got, expected)
+  end
 end
