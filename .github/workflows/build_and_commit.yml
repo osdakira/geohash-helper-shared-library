@@ -32,7 +32,7 @@ jobs:
           git config --local user.name "osdakira"
       - name: Commit files
         run: |
-          git add -f lib/build/${{ matrix.goos }}_${{ matrix.goarch }}_geohash_lib_go.so
+          git add -f lib/build/${{ matrix.goos }}_${{ matrix.goarch }}_geohash_lib_go.*
           git commit -m "Update so"
           git pull origin main --no-rebase --ff
           git push origin main
